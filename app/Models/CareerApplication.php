@@ -32,8 +32,8 @@ class CareerApplication extends Model
         "motivation"
     ];
 
-    protected $casts=[
+    protected $casts = [
         // "weekDays"=>'array',
-        "dob"=>'datetime',
+        "dob" => 'datetime',
     ];
 }

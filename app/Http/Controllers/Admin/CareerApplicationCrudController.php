@@ -30,12 +30,9 @@ class CareerApplicationCrudController extends CrudController
         CRUD::setRoute(config('backpack.base.route_prefix') . '/career-application');
         CRUD::setEntityNameStrings('career application', 'career applications');
 
-        if (!backpack_user()->can('users.create')) {
-            CRUD::denyAccess('create');
-        }
-        if (!backpack_user()->can('users.update')) {
-            CRUD::denyAccess('update');
-        }
+
+        CRUD::denyAccess('create');
+        CRUD::denyAccess('update');
 
         if (!backpack_user()->can('users.delete')) {
             CRUD::denyAccess('delete');
@@ -54,6 +51,20 @@ class CareerApplicationCrudController extends CrudController
      */
     protected function setupListOperation()
     {
+
+
+        $this->crud->addColumns([
+            // your other columns here
+            [
+                'name' => 'resume',
+                'label' => 'Resume',
+                'type' => 'closure',
+                'function' => function ($entry) {
+                    return $entry->resume != null ? '<a href="' . asset('resumes/' . $entry->resume) . '" target="_blank">View Resume</a>' : 'No Resume';
+                },
+
+            ],
+        ]);
         CRUD::column('type');
         CRUD::column('employment');
         CRUD::column('hrsWeek');
@@ -66,12 +77,12 @@ class CareerApplicationCrudController extends CrudController
         CRUD::column('address');
         CRUD::column('zip');
         CRUD::column('city');
-        CRUD::column('education1');
-        CRUD::column('education2');
-        CRUD::column('education3');
-        CRUD::column('exp1');
-        CRUD::column('exp2');
-        CRUD::column('exp3');
+        CRUD::column('education1')->type('customJson');
+        CRUD::column('education2')->type('customJson');
+        CRUD::column('education3')->type('customJson');
+        CRUD::column('exp1')->type('customJson');
+        CRUD::column('exp2')->type('customJson');
+        CRUD::column('exp3')->type('customJson');
         CRUD::column('motivation');
 
         /**
@@ -127,5 +138,29 @@ class CareerApplicationCrudController extends CrudController
     protected function setupUpdateOperation()
     {
         $this->setupCreateOperation();
+    }
+
+    protected function setupShowOperation()
+    {
+        $this->crud->set('show.setFromDb', false);
+        $this->setupListOperation();
+        // $this->crud->modifyColumn('education1', [
+        //     'type' => 'customJson'
+        // ]);
+        // $this->crud->modifyColumn('education2', [
+        //     'type' => 'customJson'
+        // ]);
+        // $this->crud->modifyColumn('education3', [
+        //     'type' => 'customJson'
+        // ]);
+        // $this->crud->modifyColumn('exp1', [
+        //     'type' => 'customJson'
+        // ]);
+        // $this->crud->modifyColumn('exp2', [
+        //     'type' => 'customJson'
+        // ]);
+        // $this->crud->modifyColumn('exp3', [
+        //     'type' => 'customJson'
+        // ]);
     }
 }

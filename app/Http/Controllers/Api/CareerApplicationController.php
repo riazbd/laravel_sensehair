@@ -28,6 +28,9 @@ class CareerApplicationController extends Controller
 
     public function apply(Request $request)
     {
+        $rules  = [
+            "resume" => "required|mimes:pdf|max:10000"
+        ];
         $reqData = $request->all();
 
         $application = CareerApplication::create($reqData);

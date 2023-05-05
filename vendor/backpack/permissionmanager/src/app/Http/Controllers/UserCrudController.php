@@ -62,6 +62,12 @@ class UserCrudController extends CrudController
                 'label' => trans('backpack::permissionmanager.email'),
                 'type'  => 'email',
             ],
+            [
+                'name'  => 'phone',
+                'label' => trans('backpack::permissionmanager.phone'),
+                'type'  => 'text',
+            ],
+
             [ // n-n relationship (with pivot table)
                 'label'     => trans('backpack::permissionmanager.roles'), // Table column heading
                 'type'      => 'select_multiple',
@@ -70,6 +76,11 @@ class UserCrudController extends CrudController
                 'attribute' => 'name', // foreign key attribute that is shown to user
                 'model'     => config('permission.models.role'), // foreign key model
             ],
+            // [
+            //     'name'  => 'email_verified_at',
+            //     'visibleInShow' => false,
+            //     'visibleInList' => false,
+            // ],
             // [ // n-n relationship (with pivot table)
             //     'label'     => trans('backpack::permissionmanager.extra_permissions'), // Table column heading
             //     'type'      => 'select_multiple',
@@ -186,6 +197,11 @@ class UserCrudController extends CrudController
                 'type'  => 'email',
             ],
             [
+                'name'  => 'phone',
+                'label' => trans('backpack::permissionmanager.phone'),
+                'type'  => 'text',
+            ],
+            [
                 'name'  => 'password',
                 'label' => trans('backpack::permissionmanager.password'),
                 'type'  => 'password',
@@ -237,8 +253,7 @@ class UserCrudController extends CrudController
 
     protected function setupShowOperation()
     {
-        // MAYBE: do stuff before the autosetup
+        $this->crud->set('show.setFromDb', false);
         $this->setupListOperation();
-
     }
 }

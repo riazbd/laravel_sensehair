@@ -19,6 +19,7 @@ return [
     'user_singular'         => 'User',
     'user_plural'           => 'Users',
     'email'                 => 'Email',
+    'phone'                 => 'Phone',
     'extra_permissions'     => 'Extra Permissions',
     'password'              => 'Password',
     'password_confirmation' => 'Password Confirmation',

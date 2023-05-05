@@ -33,8 +33,9 @@ Route::get('/mail', function () {
     return view('mail.notify', compact('booking'));
 });
 
-Route::get('/', function() {
+Route::get('/', function () {
     return redirect('admin');
 });
 
 Route::get('planner', 'App\Http\Controllers\PlannerCrudController@index')->name('planner');
+Route::get('getEvents', 'App\Http\Controllers\PlannerCrudController@getEvents')->name('get-events');
