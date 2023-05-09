@@ -11,14 +11,15 @@ class BookingPaymentController extends Controller
 {
     use HandleResponse;
 
-    public function __construct(){
+    public function __construct()
+    {
         \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
     }
 
     public function getPaymentIntent(Request $request, Booking $booking)
     {
         $intent =  \Stripe\PaymentIntent::create([
-            'amount' => floor($request->amount*100),
+            'amount' => floor($request->amount * 100),
             'currency' => 'eur',
             'payment_method_types' => ['ideal'],
         ]);
@@ -35,7 +36,7 @@ class BookingPaymentController extends Controller
     {
         $intent_id = $request->payment_intent_id;
         $intent = \Stripe\PaymentIntent::retrieve($intent_id);
-        if($intent->status == 'succeeded') {
+        if ($intent->status == 'succeeded') {
             $booking = Booking::where('stripe_id', $intent_id)->first();
             $booking->update([
                 'payment_status' => 'Paid',
