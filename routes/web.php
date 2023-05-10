@@ -39,3 +39,6 @@ Route::get('/', function () {
 
 Route::get('planner', 'App\Http\Controllers\PlannerCrudController@index')->name('planner');
 Route::get('getEvents', 'App\Http\Controllers\PlannerCrudController@getEvents')->name('get-events');
+Route::get('events/{id}', 'App\Http\Controllers\PlannerCrudController@getEventInfo')->name('get-events-info');
+Route::get('cancel-booking/{id}', 'App\Http\Controllers\PlannerCrudController@cancelBooking')->name('get-events-info');
+

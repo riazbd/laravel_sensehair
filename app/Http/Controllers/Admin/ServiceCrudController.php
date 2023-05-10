@@ -88,17 +88,17 @@ class ServiceCrudController extends CrudController
         CRUD::setValidation(ServiceRequest::class);
 
         // CRUD::field('id');
-        CRUD::field('name');
-        CRUD::field('name_en');
-        CRUD::field('duration');
-        CRUD::field('stylist_price');
-        CRUD::field('art_director_price');
-        CRUD::field('hair_size')->type('select_from_array')->options(['Men' => 'Men', 'Ladies Short' => 'Ladies Short', 'Ladies Midlong' => 'Ladies Midlong', 'Ladies Long' => 'Ladies Long']);
+        CRUD::field('name')->attributes(['required' => true]);
+        CRUD::field('name_en')->attributes(['required' => true]);
+        CRUD::field('duration')->attributes(['required' => true]);
+        CRUD::field('stylist_price')->attributes(['required' => true]);
+        CRUD::field('art_director_price')->attributes(['required' => true]);
+        CRUD::field('hair_size')->type('select_from_array')->options(['Men' => 'Men', 'Ladies Short' => 'Ladies Short', 'Ladies Midlong' => 'Ladies Midlong', 'Ladies Long' => 'Ladies Long'])->attributes(['required' => true]);
         CRUD::field('hair_size_nl')->type('select_from_array')->options(['Heren' => 'Heren', 'Dames Kort' => 'Dames Kort', 'Dames Halflang' => 'Dames Halflang', 'Dames Lang' => 'Dames Lang']);
         CRUD::field('hair_type')->type('select_from_array')->options(['Straight' => 'Straight', 'Wavy' => 'Wavy', 'Curly' => 'Curly', 'Frizzy' => 'Frizzy']);
         CRUD::field('hair_type_nl')->type('select_from_array')->options(['Steil' => 'Steil', 'Golvend' => 'Golvend', 'Krullend' => 'Krullend', 'Kroes' => 'Kroes']);
-        CRUD::field('category')->type('select_from_array')->options(['Wassen, knippen, drogen' => 'Wassen, knippen, drogen', 'Baard modeleren' => 'Baard modeleren', 'Kleuren' => 'Kleuren', 'Uitgroei' => 'Uitgroei', 'Baard kleuren' => 'Baard kleuren', 'Relaxen' => 'Relaxen']);
-        CRUD::field('category_en')->type('select_from_array')->options(['Wash, cut, dry' => 'Wash, cut, dry', 'Beard modeling' => 'Beard modeling', 'Colors' => 'Colors', 'Outgrowth' => 'Outgrowth', 'Beard colors' => 'Beard colors', 'Relax' => 'Relax']);
+        CRUD::field('category')->type('select_from_array')->options(['Wassen, knippen, drogen' => 'Wassen, knippen, drogen', 'Baard modeleren' => 'Baard modeleren', 'Kleuren' => 'Kleuren', 'Uitgroei' => 'Uitgroei', 'Baard kleuren' => 'Baard kleuren', 'Relaxen' => 'Relaxen'])->attributes(['required' => true]);
+        CRUD::field('category_en')->type('select_from_array')->options(['Wash, cut, dry' => 'Wash, cut, dry', 'Beard modeling' => 'Beard modeling', 'Colors' => 'Colors', 'Outgrowth' => 'Outgrowth', 'Beard colors' => 'Beard colors', 'Relax' => 'Relax'])->attributes(['required' => true]);
         // CRUD::field('deleted_at');
         // CRUD::field('created_at');
         // CRUD::field('updated_at');

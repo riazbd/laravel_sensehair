@@ -100,7 +100,7 @@ class BookingsController extends Controller
     {
         $booking = Booking::where('id', $request->booking_id)->with('customer')->first();
         try {
-            $booking->payment_status = "cancelled";
+            $booking->payment_status = "Cancelled";
             $booking->save();
             // $title = "Booking Cancelled!";
             // $body = "Your appointment with Sense Hair on " . $booking->booking_time->toDateString() . " at " . $booking->booking_time->format('H:i') . " at Central Plaza 12. has been cancelled!";

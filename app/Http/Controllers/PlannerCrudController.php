@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Booking;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -14,9 +15,12 @@ class PlannerCrudController extends Controller
 {
     public function index()
     {
-        $bookings = Booking::all();
-
+        $bookings = Booking::whereIn('payment_status', ['Paid', 'Unpaid'])->get();
         $events = [];
+
+        $users = User::role(['stylist', 'art_director'])->get();
+
+        // dd($users);
 
         foreach ($bookings as $booking) {
             $start = Carbon::parse($booking->booking_time)->format('Y-m-d\TH:i:s');
@@ -52,24 +56,29 @@ class PlannerCrudController extends Controller
             // $server_role =  $server_roles[0];
             // dd($server_roles[0]);
             $events[] = [
-                'title' => ucfirst(str_replace('_', " ", $firstRoleName))  . ' ' . optional($booking->server()->first())->name . ' to ' . optional($booking->customer()->first())->name,
+                'title' => optional($booking->services()->first())->name . ucfirst(str_replace('_', " ", $firstRoleName))  . ' ' . optional($booking->server()->first())->name . ' to ' . optional($booking->customer()->first())->name,
                 'start' => $start,
                 'end' => $end,
-                "backgroundColor" => '#EFC050'
+                "backgroundColor" => '#EFC050',
+                "id" => $booking->id,
             ];
         }
-        return view('planner', compact('events'));
+        return view('planner', compact('users', 'events'));
     }
 
     public function getEvents()
     {
-        $selectedRole = request('role');
-        if ($selectedRole == 'all') {
-            $bookings = Booking::all();
+        $selectedName = request('name');
+        $userId = User::where('id', $selectedName)->get()->first();
+        if ($selectedName == 'all') {
+            // $bookings = Booking::all();
+            $bookings = Booking::whereIn('payment_status', ['Paid', 'Unpaid'])->get();
         } else {
-            $bookings = Booking::whereHas('server', function ($query) use ($selectedRole) {
-                $query->role($selectedRole);
+
+            $bookings = Booking::whereHas('server', function ($query) use ($selectedName) {
+                $query->where('id', (integer) $selectedName)->whereIn('payment_status', ['Paid', 'Unpaid']);
             })->get();
+            // $bookings = Booking::where('server_id', $userId)->get();
         }
 
         // dd($bookings);
@@ -109,11 +118,12 @@ class PlannerCrudController extends Controller
             // $server_role =  $server_roles[0];
             // dd($server_roles[0]);
             $events[] = [
-                'title' => ucfirst(str_replace('_', " ", $firstRoleName))  . ' ' . optional($booking->server()->first())->name . ' to ' . optional($booking->customer()->first())->name,
+                'title' => optional($booking->services()->first())->name . ucfirst(str_replace('_', " ", $firstRoleName))  . ' ' . optional($booking->server()->first())->name . ' to ' . optional($booking->customer()->first())->name,
                 'start' => $start,
                 'end' => $end,
                 "backgroundColor" => '#EFC050',
                 "role" => $firstRoleName,
+                "id" => $booking->id,
             ];
 
             // dd(json_encode($events));
@@ -122,5 +132,38 @@ class PlannerCrudController extends Controller
         }
 
         return response()->json($events);
+    }
+
+    public function getEventInfo($id) {
+        $booking = Booking::where('id', $id)->first();
+
+        $bookingResponse = [
+            'id' => $booking->id,
+            'title' => optional($booking->services()->first())->name,
+            'customer_name' => optional($booking->customer()->first())->name,
+            'customer_phone' => optional($booking->customer()->first())->phone,
+            'booking_time' => $booking->booking_time,
+            'booking_duration' => $booking->duration,
+            'payment_status' => $booking->payment_status
+
+        ];
+
+        return response()->json($bookingResponse);
+    }
+
+    public function cancelBooking($id) {
+        $booking = Booking::where('id', $id)->first();
+        try {
+            $booking->payment_status = "Cancelled";
+            $booking->save();
+            // $title = "Booking Cancelled!";
+            // $body = "Your appointment with Sense Hair on " . $booking->booking_time->toDateString() . " at " . $booking->booking_time->format('H:i') . " at Central Plaza 12. has been cancelled!";
+            // Mail::to($booking->customer->email)->send(new BookingSuccessful($body, $title));
+            // LaraTwilio::notify($booking->customer->phone, $body);
+            return redirect()->back();
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+            return $this->respondServerError(['message' => $e->getMessage()]);
+        }
     }
 }

@@ -36,8 +36,8 @@ class BookingCrudController extends CrudController
         // if (!backpack_user()->can('bookings.update')) {
         //     CRUD::denyAccess('update');
         // }
-        CRUD::denyAccess('create');
-        CRUD::denyAccess('update');
+        // CRUD::denyAccess('create');
+        // CRUD::denyAccess('update');
 
         if (!backpack_user()->can('bookings.delete')) {
             CRUD::denyAccess('delete');
