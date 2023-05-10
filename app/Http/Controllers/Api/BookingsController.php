@@ -50,7 +50,7 @@ class BookingsController extends Controller
             $email = auth()->user()->email;
             $title = "Booking Successful!";
             $body = "You have an appointment with Sense Hair on " . $booking->booking_time->toDateString() . " at " . $booking->booking_time->format('H:i') . " at Central Plaza 12. See you there!";
-            
+
             if ($request->sendEmailAndSms == true) {
                 try {
                     Mail::to($email)->send(new BookingSuccessful($body, $title));
@@ -98,16 +98,17 @@ class BookingsController extends Controller
 
     public function cancel(Request $request)
     {
-        $booking = Booking::where('id',$request->booking_id)->with('customer')->first();
+        $booking = Booking::where('id', $request->booking_id)->with('customer')->first();
         try {
             $booking->payment_status = "cancelled";
             $booking->save();
-            $title = "Booking Cancelled!";
-            $body = "Your appointment with Sense Hair on " . $booking->booking_time->toDateString() . " at " . $booking->booking_time->format('H:i') . " at Central Plaza 12. has been cancelled!";
-            Mail::to($booking->customer->email)->send(new BookingSuccessful($body, $title));
-            LaraTwilio::notify($booking->customer->phone, $body);
+            // $title = "Booking Cancelled!";
+            // $body = "Your appointment with Sense Hair on " . $booking->booking_time->toDateString() . " at " . $booking->booking_time->format('H:i') . " at Central Plaza 12. has been cancelled!";
+            // Mail::to($booking->customer->email)->send(new BookingSuccessful($body, $title));
+            // LaraTwilio::notify($booking->customer->phone, $body);
             return $this->respondOk(['message' => "Booking cancelled successfully!"]);
         } catch (\Exception $e) {
+            echo $e->getMessage();
             return $this->respondServerError(['message' => $e->getMessage()]);
         }
     }

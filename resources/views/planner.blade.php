@@ -7,7 +7,7 @@
     }
 
     .fc-scrollgrid-sync-table {
-        width: 100vw !important;
+        /* width: 100vw !important; */
         height: 100% !important;
     }
 
